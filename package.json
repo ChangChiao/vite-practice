@@ -13,6 +13,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "connect": "^3.7.0",
     "picocolors": "^1.0.0"
   }
 }
