@@ -2,10 +2,17 @@
   "name": "vite-practice",
   "module": "vivv.js",
   "type": "module",
+  "scripts": {
+    "dev": "bun run vivv.js",
+    "watch": "bun run --watch vivv.js"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "picocolors": "^1.0.0"
   }
 }
