@@ -1,32 +1,23 @@
+import { getFilePathAndContentType } from "./utils";
 import path from "path";
-
-const ContentTypes = {
-  html: "text/html",
-  js: "text/javascript",
-  css: "text/css",
-  png: "image/png",
-  jpg: "image/jpg",
-};
-
-const getFilePathAndContentType = (filename) => {
-  if (filename === "/") {
-    filename = "index.html";
-  }
-
-  const extname = path.extname(filename).replace(".", "");
-  const contentType = ContentTypes[extname] || "text/html";
-  const rootPath = process.cwd();
-  const filePath = path.join(rootPath, filename);
-
-  return { filePath, contentType };
-};
 
 const indexHTMLMiddleware = async (req, res) => {
   const { filePath, contentType } = getFilePathAndContentType(req.url);
 
   try {
     const file = Bun.file(filePath);
-    const content = await file.text();
+    let content = await file.text();
+
+    if (path.basename(filePath) === "index.html") {
+      const regex = /(<head>)([\s\S]*?<\/head>)/i;
+      const match = content.match(regex);
+      const clientScript = "<script src='vivv/client.js'></script>";
+
+      if (match) {
+        content = content.replace(match[0], match[1] + clientScript + match[2]);
+      }
+    }
+
     res.writeHead(200, { "Content-Type": contentType });
     res.end(content);
   } catch (error) {

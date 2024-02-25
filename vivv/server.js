@@ -10,8 +10,12 @@ const createWSServer = () => {
   const server = new WebSocketServer({ port: PORT_WS });
   server.on("connection", (ws) => {
     console.log(`${color.green("ws connect")}`);
+    ws.send(PROJECT_NAME + "connected");
     ws.on("message", (data) => {
       console.log("Received: %s", data);
+    });
+    ws.on("close", () => {
+      console.log("server close");
     });
   });
 };
