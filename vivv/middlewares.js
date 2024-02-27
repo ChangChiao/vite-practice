@@ -11,7 +11,26 @@ const replaceImportMiddleware = async (req, res, next) => {
     let content = await file.text();
 
     const regex = /from ['"](?!\.\/)([^'"]+)['"]/g;
-    content = content.replace(regex, `from "./node_modules/$1"`);
+
+    //pre-bundling
+    const matches = content.match(regex);
+    if (matches) {
+      const mod_regex = /['"](?!\.\/)([^'"]+)['"]/;
+      const modules = matches
+        .map((m) => {
+          return m.match(mod_regex)[1];
+        })
+        .map(getEntryPoint);
+      Bun.build({
+        entryPoint: modules.map((m) => `./node_modules/${m}`),
+        outdir: "./node_modules/.vivv/deps",
+      });
+    }
+
+    content = content.replace(regex, (match, capture) => {
+      const entryPoint = getEntryPoint(capture);
+      return `from "./node_modules/.vivv/deps/${entryPoint}"`;
+    });
     res.writeHead(200, { "Content-Type": contentType });
     res.end(content);
   }
