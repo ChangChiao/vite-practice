@@ -13,6 +13,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "chokidar": "^3.6.0",
     "connect": "^3.7.0",
     "lodash-es": "^4.17.21",
     "picocolors": "^1.0.0",
