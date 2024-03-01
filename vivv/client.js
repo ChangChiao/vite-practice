@@ -1,6 +1,6 @@
 const ws = new WebSocket("ws:/localhost:9527");
 
-ws.addEventListener("open", ({ target: s }) => {
+ws.addEventListener("open", ({ target: socket }) => {
   s.addEventListener("message", ({ data }) => {
     const result = JSON.parse(data);
 
@@ -10,6 +10,7 @@ ws.addEventListener("open", ({ target: s }) => {
         break;
       case "change":
         const { file } = result;
+
         if (file.endsWith(".css")) {
           fetch(file)
             .then((data) => data.text())
@@ -34,7 +35,7 @@ ws.addEventListener("open", ({ target: s }) => {
     console.log(result);
   });
 
-  s.addEventListener("close", () => {
-    console.log("close");
+  socket.addEventListener("close", () => {
+    console.log("closed");
   });
 });
