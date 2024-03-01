@@ -1,4 +1,5 @@
 import path from "path";
+import { getFilePathAndContentType } from "../utils.js";
 
 const indexHTMLMiddleware = async (req, res) => {
   const { filePath, contentType } = getFilePathAndContentType(req.url);
